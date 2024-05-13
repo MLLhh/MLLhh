@@ -65,9 +65,10 @@
                        是分片：
                                   创建一个包头变量，用复制包头函数（headParser）保存数据中的包头到新建的包头变量中
                                   上锁
-                                   将一段时间内的数据包添加到QList<PackageStatus>中
+                                   将接收到的数据分片添加到QList<PackageStatus>中
                                    在QList<PackageStatus>中搜索同一组的数据进行拼接
                                    组包成功将返回数据包长度
+                       不是分片：   调用socket读取函数正常读取
                                 
 3.超时检测函数（位于单独线程下）：
                         上锁
