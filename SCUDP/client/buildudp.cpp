@@ -5,7 +5,7 @@ quint32 PackageHead::serialNum = 0;
 UdpdataSocket::UdpdataSocket(QObject *parent)
     : QUdpSocket{parent}
 {
-    this->m_package_capacity = 1471;
+    this->m_package_capacity = 900;
     this->m_packagehead_size = sizeof(PackageHead);
     this->m_sleep_millisecond = 1;
 }
@@ -50,7 +50,7 @@ qint64 UdpdataSocket::writeDatagram(const QByteArray &datagram, const QHostAddre
 
         // 发送
         qint64 len = QUdpSocket::writeDatagram(packBa, host, port);
-        qDebug() << "write\t" << packageTotalNum << "\t" << iPkg << "\t" << len;
+        qDebug() << "write\t" << packageTotalNum << "\t" << iPkg << "\t" << len<< "批号\t" <<packHead.BN;
         QThread::msleep(m_sleep_millisecond);
         if (len == -1) {
             qDebug() << "UdpImgSocket::writeDatagram: error in send " + packBa.toHex();
