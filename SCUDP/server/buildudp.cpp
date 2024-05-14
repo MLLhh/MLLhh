@@ -62,6 +62,7 @@ qint64 UdpdataSocket::readDatagram(QByteArray& data_arr, QHostAddress *address, 
         PackageStatus packStatus(packHead);
         packStatus.insertPackage(packHead, data);
         (*m_pend_data).append(packStatus);
+        qDebug()<<"批号"<<packHead.BN<<endl;
         //emit k();
     } else {
         if ((*m_pend_data)[index].insertPackage(packHead, data) == 1) {
@@ -69,6 +70,7 @@ qint64 UdpdataSocket::readDatagram(QByteArray& data_arr, QHostAddress *address, 
             data_arr.append((*m_pend_data)[index].data);
             (*m_pend_data).removeAt(index);
             ret = packHead.fileSize;
+            qDebug()<<"批号"<<packHead.BN<<endl;
         }
     }
 
