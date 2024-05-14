@@ -6,15 +6,16 @@ quint32 PackageHead::serialNum = 0;
 UdpdataSocket::UdpdataSocket(QObject *parent)
     : QUdpSocket{parent}
 {
+
     this->m_package_capacity = 500;
     this->m_packagehead_size = sizeof(PackageHead);
-    this->m_second_threshold = 30 * 1000;
-    this->m_sleep_millisecond = 5 * 1000;
+    this->m_second_threshold = 3;//有点问题，单位是秒不是毫秒
 
     this->m_mutex = new QMutex;
     this->m_pend_data = new QList<PackageStatus>;
     this->m_timeDetector = new TimeoutDetector(m_pend_data, m_second_threshold, m_mutex);
     this->m_timeDetector->start();
+
 }
 
 qint64 UdpdataSocket::readDatagram(QByteArray& data_arr, QHostAddress *address, quint16 *port) {
@@ -27,7 +28,6 @@ qint64 UdpdataSocket::readDatagram(QByteArray& data_arr, QHostAddress *address, 
         free(data);
         return -1;
     }
-
     // 不是分包数据
     if (isFragmented(data, maxSize) == false) {
         data_arr.append(data, maxSize);
@@ -35,8 +35,6 @@ qint64 UdpdataSocket::readDatagram(QByteArray& data_arr, QHostAddress *address, 
         free(data);
         return readDataSize;
     }
-
-
     /*
      * 处理分包数据
     */
@@ -64,6 +62,7 @@ qint64 UdpdataSocket::readDatagram(QByteArray& data_arr, QHostAddress *address, 
         PackageStatus packStatus(packHead);
         packStatus.insertPackage(packHead, data);
         (*m_pend_data).append(packStatus);
+        //emit k();
     } else {
         if ((*m_pend_data)[index].insertPackage(packHead, data) == 1) {
             // 输出完整数据，并移除该PackageStatus
@@ -118,17 +117,16 @@ void TimeoutDetector::run() {
     {
         m_mutex->lock();
         QDateTime curTime = QDateTime::currentDateTime();
-        //qDebug() << curTime.toString();
+        qDebug() << curTime.toString();
         for (int i = 0; i < m_packs->size(); ++i) {
             if (curTime.secsTo((*m_packs)[i].startTime) > m_second_threshold) {
                 delete [] (*m_packs)[i].data;
                 (*m_packs).removeAt(i);
-                qDebug() << curTime.toString();
             }
         }
         m_mutex->unlock();
 
-        sleep(m_second_threshold);
+        sleep(m_second_threshold);//有点问题，单位是秒不是毫秒
     }
 }
 

@@ -7,7 +7,7 @@ UdpdataSocket::UdpdataSocket(QObject *parent)
 {
     this->m_package_capacity = 1471;
     this->m_packagehead_size = sizeof(PackageHead);
-    this->m_sleep_millisecond = 5;
+    this->m_sleep_millisecond = 1;
 }
 
 
@@ -25,7 +25,6 @@ qint64 UdpdataSocket::writeDatagram(const QByteArray &datagram, const QHostAddre
     // 计算包数量
     quint32 packageTotalNum = datagram.size() / m_package_capacity;
     packageTotalNum += datagram.size() % m_package_capacity ? 1 : 0;
-
     // 分包发送
     qint64 nBytes = 0; // 发送总字节数
     PackageHead packHead;

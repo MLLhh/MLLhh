@@ -67,7 +67,7 @@ void MainWindow::ondeviceChanged(int index)
 void MainWindow::toStartTimer()
 {
     is_start = true;
-    timer->start(1*1000);
+    timer->start(3);
 }
 void MainWindow::toStopTimer()
 {

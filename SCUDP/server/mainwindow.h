@@ -20,13 +20,15 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QUdpSocket *msocket;
-   // UdpdataSocket *msocket;
+    UdpdataSocket *msocket;
     QHostAddress addr;
     quint16 port;
 private slots:
     void listen_start();
     void listen_over();
     void receieve_start();
+    void k_test();
+signals:
+
 };
 #endif // MAINWINDOW_H

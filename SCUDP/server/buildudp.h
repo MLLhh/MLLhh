@@ -101,11 +101,11 @@ private:
     quint32 m_package_capacity; // 数据包容量，不含包头的数据大小
     quint32 m_packagehead_size; // 包头字节数
     qint64 m_second_threshold;  // 数据最长保留时间
-    qint64 m_sleep_millisecond;  // 两相邻包间的发送间隔，减少丢包
     QMutex *m_mutex;    // 组包数据列表的互斥锁
     TimeoutDetector *m_timeDetector;  // 超时探测器
 
     QList<PackageStatus> *m_pend_data;   // 等待完成组包的数据
+signals:
 };
 
 
