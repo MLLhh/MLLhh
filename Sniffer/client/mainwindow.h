@@ -8,6 +8,9 @@
 #include <QTimer>
 #include <QTime>
 #include <time.h>
+#include <vector>
+#include <random>
+#include <QtCore/QRandomGenerator>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

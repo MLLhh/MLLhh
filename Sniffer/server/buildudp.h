@@ -99,7 +99,7 @@ private:
     bool isFragmented(char *data, qint64 length);   // 判断是否为分包数据
     bool headParser(PackageHead& packHead, char *data, qint64 length);  // 解析包头
 
-    quint32 m_package_capacity; // 数据包容量，不含包头的数据大小
+    //quint32 m_package_capacity; // 数据包容量，不含包头的数据大小
     quint32 m_packagehead_size; // 包头字节数
     qint64 m_second_threshold;  // 数据最长保留时间
     QMutex *m_mutex;    // 组包数据列表的互斥锁

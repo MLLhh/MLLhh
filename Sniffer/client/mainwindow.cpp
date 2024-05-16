@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "buildudp.h"
 int i=0;
+QRandomGenerator generator;
+int length;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -24,15 +26,17 @@ MainWindow::~MainWindow()
 void MainWindow::senddata()
 {
     qint64 len;
-    int length = 1500;
+//    QRandomGenerator generator;
+    length =generator.bounded(800, 1000);
     sendbuff.resize(length);
     QByteArray arr = ui->lineEdit_send->text().toUtf8();
     //msocket->writeDatagram(arr,QHostAddress::Broadcast,ui->spinBox_port->value());
     len = bsocket->writeDatagram(sendbuff, QHostAddress("10.0.2.15"), 10000);
-    QString len_str = QString::number(len);
     ++i;
+    QString len_str = QString::number(len);
     QString i_str = QString::number(i);
-    ui->textBrowser->append("单包大小:"+len_str+"number"+i_str);
+    QString length_str = QString::number(length);
+    ui->textBrowser->append("随机数:"+length_str+"发包大小:"+len_str+"number"+i_str);
     //ui->textBrowser->insertPlainText("send:"+QString(arr)+"\n");
 
     ui->lineEdit_send->clear();

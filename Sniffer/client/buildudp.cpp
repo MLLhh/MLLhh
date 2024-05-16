@@ -12,7 +12,7 @@ UdpdataSocket::UdpdataSocket(QObject *parent)
 
 
 qint64 UdpdataSocket::writeDatagram(const QByteArray &datagram, const QHostAddress &host, quint16 port) {
-    if (datagram.size() < m_package_capacity) {
+    if (datagram.size() <= m_package_capacity) {
         qDebug()<<"文件过小"<<endl;
         return QUdpSocket::writeDatagram(datagram, host, port);
     }

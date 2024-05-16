@@ -7,7 +7,7 @@ UdpdataSocket::UdpdataSocket(QObject *parent)
     : QUdpSocket{parent}
 {
 
-    this->m_package_capacity = 500;
+    //this->m_package_capacity = 500;
     this->m_packagehead_size = sizeof(PackageHead);
     this->m_second_threshold = 3;//有点问题，单位是秒不是毫秒
 
