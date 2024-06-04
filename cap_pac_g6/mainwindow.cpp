@@ -9,12 +9,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     packetCapture = new PacketCapture(this);
     getLocalHostIP();
 
     connect(ui->comboBox_interface, SIGNAL(currentIndexChanged(int)), this, SLOT(onNetworkInterfaceChanged(int)));
-    connect(packetCapture, SIGNAL(emitsignal_cap(QString,const u_char*)), this, SLOT(printTableInfo(msStrPackLen,g_pPktdata)));
+    connect(packetCapture, SIGNAL(emitsignal_cap(QString,const u_char*)), this, SLOT(printTableInfo(QString,const u_char*)));
     // 设置tableWidgetItem 点击事件
     connect(ui->tableWidget,SIGNAL(cellClicked(int,int)),this,SLOT(on_tableWidget_cellClicked(int,int)));
 }
@@ -56,30 +55,33 @@ void MainWindow::onNetworkInterfaceChanged(int index)
 
 void MainWindow::on_dialog_clicked()
 {
+
     packetCapture->setFilePath(QFileDialog::getOpenFileName(this));
+
 }
 
 void MainWindow::printTableInfo(QString strLeng,const u_char* pktData)
 {
     // 设置滚动条始终在底端
     ui->tableWidget->scrollToBottom();
+
     // 定义tableWidget中行号
     int nRow  = ui->tableWidget->rowCount();
     // 根据row依此插入
-    ui->tableWidget->insertRow(nRow);
+    //ui->tableWidget->insertRow(nRow);
     // 定义列表中的项目
     QTableWidgetItem *item;
     item = new QTableWidgetItem(strLeng);
-    ui->tableWidget->setItem(nRow, 1, item);
+    ui->tableWidget->setItem(0, 0, item);
 
     // 将产生的数据存放在数组中，备点击时读取
     for( int i = 0; i < strLeng.toInt(); ++i)
     {
-        g_nArray[nRow][i] = pktData[i];
+        g_nArray[0][i] = pktData[i];
 
     }
     // 存储本次数据报长度
-    g_nLenPktData[nRow][nRow] = strLeng.toInt();
+    g_nLenPktData[0][0] = strLeng.toInt();
 
 }
 
@@ -112,14 +114,14 @@ void MainWindow::on_quitButton_clicked()
     }
 }
 
-
-void MainWindow::on_tableWidget_cellClicked(int row, int column)
+void MainWindow::on_tableWidget_cellClicked(int row1, int column)
 {
     int i;
+    int row=0;
     char ch[10];
     ui->textEdit->clear();
     // 获取捕获包的长度
-    int nPackLen = g_nLenPktData[row][row];
+    int nPackLen = g_nLenPktData[row][0];
     //  显示捕获的数据
     for(  i = 0; i < nPackLen; i++)
     {

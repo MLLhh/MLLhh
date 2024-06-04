@@ -69,12 +69,17 @@
       <widget class="QTableWidget" name="tableWidget">
        <row>
         <property name="text">
-         <string>长度</string>
+         <string/>
         </property>
        </row>
        <column>
         <property name="text">
          <string>长度</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>数据</string>
         </property>
        </column>
       </widget>

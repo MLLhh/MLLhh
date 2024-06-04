@@ -40,19 +40,17 @@ public:
 private:
 
 
+
     Ui::MainWindow *ui;
 
     QList<QHostAddress> IPlist; /* save all ip address */
 
     PacketCapture *packetCapture;
     void getLocalHostIP();
+//    QLabel *label6;
 private slots:
-
-
     void onNetworkInterfaceChanged(int index);
-
     void on_dialog_clicked();
-
     void printTableInfo(QString,const u_char*);
     void on_runButton_clicked();
     void on_quitButton_clicked();

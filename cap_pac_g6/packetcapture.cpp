@@ -1,8 +1,7 @@
 #include<packetcapture.h>
-
+#include<mainwindow.h>
 const u_char* g_pPktdata;
 QString PacketCapture::msStrPackLen = "";
-
 void PacketCapture::set_private_var(const QString &device, const QString &IpAddress, const QString &Port) {
     dev = device;
     ipAddress = IpAddress;
@@ -17,8 +16,14 @@ void PacketCapture::setFilePath(const QString &Address)
 {
     filePath = Address;
 }
+void PacketCapture::packetcapture(QString len,const u_char* data)
+{
+    emit emitsignal_cap(len,data);
+}
+
 void PacketCapture::packetHandler(u_char *user, const struct pcap_pkthdr *h, const u_char *bytes)
 {
+
     struct sockaddr_in *src_ip = (struct sockaddr_in *)user;
     struct ethhdr *eth = (struct ethhdr *)bytes;
     struct iphdr *ip = (struct iphdr *)(bytes + sizeof(struct ethhdr));
@@ -29,6 +34,8 @@ void PacketCapture::packetHandler(u_char *user, const struct pcap_pkthdr *h, con
 
     g_pPktdata = bytes;
     msStrPackLen = QString::number(h->len);
+    PacketCapture *packagecapture1 = reinterpret_cast<PacketCapture*>(user);
+    packagecapture1->packetcapture(msStrPackLen,g_pPktdata);
     if (src_ip->sin_addr.s_addr == dst_ip.sin_addr.s_addr) {
         qDebug() << "Ethernet Header:";
 
@@ -63,7 +70,6 @@ void PacketCapture::packetHandler(u_char *user, const struct pcap_pkthdr *h, con
 
 
 }
-
 void PacketCapture::run(){
 
     char errbuf[PCAP_ERRBUF_SIZE];
@@ -95,20 +101,14 @@ void PacketCapture::run(){
         return;
     }
 
-
-
     if (pcap_setfilter(handle, &fp) == -1) {
         qDebug() << "Couldn't install filter" << filterExp << ":" << pcap_geterr(handle);
         pcap_close(handle);
         return;
     }
 
-    while(1)
-    {
-        pcap_loop(handle, -1, packetHandler, (u_char *)&src_ip);
-        emit emitsignal_cap(msStrPackLen,g_pPktdata);
-    }
 
+    pcap_loop(handle, -1, packetHandler, reinterpret_cast<u_char*>(this));
     pcap_freecode(&fp);
     pcap_close(handle);
 }
